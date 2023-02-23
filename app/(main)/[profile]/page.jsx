@@ -45,8 +45,8 @@ function Content({ user, posts, postsLoading, authLoading, authUser }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Stack pt={16} spacing="5">
-      <Flex p={["4", "6"]} pos="relative" align="center">
-        <Avatar size="2xl" user={user} />
+      <Flex p={[4, 6]} pt={[12, 12]} pos="relative" align="center">
+        <Avatar size={["xl", "2xl"]} user={user} />
 
         {!authLoading && authUser.id === user.id && (
           <Button
@@ -56,6 +56,7 @@ function Content({ user, posts, postsLoading, authLoading, authUser }) {
             right="6"
             colorScheme="teal"
             onClick={onOpen}
+            size={["sm", "md"]}
           >
             Change avatar
           </Button>
