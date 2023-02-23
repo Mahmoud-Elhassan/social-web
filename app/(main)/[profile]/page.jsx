@@ -24,19 +24,25 @@ export default function Profile() {
 
   const { posts, isLoading: postsLoading } = usePosts(id);
   const { user, isLoading: userLoading } = useUser(id);
+  const { user: authUser, isLoading: authLoading } = useAuth();
 
-  return !userLoading && user ? (
-    <Content posts={posts} postsLoading={postsLoading} user={user} />
+  return !userLoading && !authLoading && user ? (
+    <Content
+      posts={posts}
+      postsLoading={postsLoading}
+      user={user}
+      authUser={authUser}
+      authLoading={authLoading}
+    />
   ) : (
     <Text fontSize="5xl" p="36" textAlign="center">
-      404.
+      {!userLoading && !authLoading && !user && "404."}
     </Text>
   );
 }
 
-function Content({ user, posts, postsLoading }) {
+function Content({ user, posts, postsLoading, authLoading, authUser }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user: authUser, isLoading: authLoading } = useAuth();
   return (
     <Stack pt={16} spacing="5">
       <Flex p={["4", "6"]} pos="relative" align="center">
@@ -59,7 +65,7 @@ function Content({ user, posts, postsLoading }) {
           <Text fontSize="2xl">{user.username}</Text>
           <HStack spacing="10">
             <Text color="gray.700" fontSize={["sm", "lg"]}>
-              Posts: {posts.length}
+              Posts: {!postsLoading && posts.length}
             </Text>
             <Text color="gray.700" fontSize={["sm", "lg"]}>
               Joined: {format(user.date, "MMMM YYY")}
@@ -71,11 +77,7 @@ function Content({ user, posts, postsLoading }) {
       </Flex>
       <Divider />
 
-      {postsLoading ? (
-        <Text>Posts are loading...</Text>
-      ) : (
-        <PostsList posts={posts} />
-      )}
+      {!postsLoading && <PostsList posts={posts} />}
     </Stack>
   );
 }
